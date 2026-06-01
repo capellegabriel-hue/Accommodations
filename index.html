@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Capelle & Piotr · Accommodation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Jost:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;}
+    html,body{min-height:100%;background:#fdf6f0;}
+    body{font-family:'Jost',sans-serif;padding:0 1rem 4rem;}
+
+    .page-header{text-align:center;padding:3.5rem 1rem 2.5rem;}
+    .page-eyebrow{font-size:.72rem;letter-spacing:.25em;text-transform:uppercase;color:#c0606a;margin-bottom:1rem;}
+    .page-title{font-family:'Cormorant Garamond',serif;font-size:2.8rem;font-weight:300;color:#3d2020;line-height:1.15;margin-bottom:.6rem;}
+    .page-subtitle{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;color:#9e6b72;letter-spacing:.02em;}
+    .page-divider{display:flex;align-items:center;gap:1rem;max-width:340px;margin:1.8rem auto 0;}
+    .page-divider-line{flex:1;height:0.5px;background:#e8b4bc;}
+    .page-divider-ornament{color:#e8b4bc;font-size:.9rem;letter-spacing:.3em;}
+
+    .wrap{max-width:580px;margin:0 auto;padding:0;}
+
+    .search-area{text-align:center;margin-bottom:2rem;}
+    .search-area p{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;color:#9e6b72;margin-bottom:1rem;letter-spacing:.03em;}
+    #nameInput{width:100%;max-width:420px;padding:.7rem 1.2rem;border:0.5px solid #e8b4bc;border-radius:2px;font-family:'Jost',sans-serif;font-size:.95rem;background:#fff9f9;color:#3d2020;outline:none;}
+    #nameInput:focus{border-color:#c0606a;}
+    #nameInput::placeholder{color:#c4929a;}
+    .suggestions{max-width:420px;margin:.3rem auto 0;background:#fff9f9;border:0.5px solid #e8b4bc;border-radius:2px;overflow:hidden;display:none;position:relative;z-index:10;}
+    .sug-item{padding:.5rem 1.2rem;cursor:pointer;font-size:.9rem;color:#3d2020;border-bottom:0.5px solid #f0d5d8;}
+    .sug-item:last-child{border-bottom:none;}
+    .sug-item:hover{background:#fceef0;}
+
+    .card{max-width:520px;margin:0 auto;border:0.5px solid #e8b4bc;padding:0;background:#fff9f9;position:relative;display:none;overflow:hidden;box-shadow:0 4px 32px rgba(180,120,120,.08);}
+    .lace-top{width:100%;display:block;line-height:0;}
+    .lace-top svg{display:block;width:100%;}
+    .card-top{padding:2.2rem 2.5rem 1.5rem;text-align:center;border-bottom:0.5px solid #f0d5d8;background:linear-gradient(180deg,#fff0f2 0%,#fff9f9 100%);}
+    .card-eyebrow{font-family:'Jost',sans-serif;font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:#c0606a;margin-bottom:.8rem;}
+    .card-name{font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:300;color:#3d2020;line-height:1.1;margin-bottom:.3rem;}
+    .cabin-name{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.5rem;font-weight:300;color:#9e6b72;margin:1rem 0 .15rem;}
+    .cabin-translation{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;font-weight:300;color:#b89099;}
+    .cabin-type{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:#c0606a;margin-top:.4rem;}
+    .nights-badge{display:inline-block;font-size:.7rem;letter-spacing:.13em;text-transform:uppercase;border:0.5px solid #e8b4bc;padding:.25rem .85rem;color:#9e6b72;margin-top:.8rem;background:#fff0f2;}
+    .card-body{padding:1.5rem 2.5rem;}
+    .section-label{font-size:.66rem;letter-spacing:.22em;text-transform:uppercase;color:#c0606a;margin-bottom:.7rem;margin-top:1.3rem;}
+    .section-label:first-child{margin-top:0;}
+    .roommates-list{list-style:none;display:flex;flex-direction:column;gap:.35rem;}
+    .roommates-list li{font-size:.92rem;color:#3d2020;padding-left:.8rem;position:relative;}
+    .roommates-list li::before{content:'—';position:absolute;left:0;color:#e8b4bc;font-size:.8rem;}
+    .price-row{display:flex;justify-content:space-between;align-items:baseline;padding:.5rem 0;border-bottom:0.5px solid #f0d5d8;}
+    .price-row:last-child{border-bottom:none;}
+    .price-label{font-size:.88rem;color:#9e6b72;}
+    .price-val{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:400;color:#3d2020;}
+    .price-note{font-size:.75rem;color:#b08a8e;margin-top:.4rem;font-style:italic;}
+    .divider-floral{text-align:center;color:#e8b4bc;font-size:.85rem;letter-spacing:.4em;margin:1rem 0;}
+    .bank-box{background:#fff0f2;border:0.5px solid #f0d5d8;padding:.85rem 1rem;margin-bottom:.75rem;}
+    .bank-row{display:flex;justify-content:space-between;align-items:center;padding:.25rem 0;}
+    .bank-key{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:#c0606a;}
+    .bank-val{font-size:.85rem;color:#3d2020;font-family:'Jost',sans-serif;letter-spacing:.04em;}
+    .copy-btn{background:none;border:0.5px solid #e8b4bc;color:#9e6b72;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:.2rem .55rem;cursor:pointer;font-family:'Jost',sans-serif;border-radius:2px;transition:background .15s;}
+    .copy-btn:hover{background:#fceef0;}
+    .copy-btn.copied{color:#c0606a;border-color:#c0606a;}
+    .pay-buttons{display:flex;flex-direction:column;gap:.55rem;}
+    .pay-btn{display:flex;align-items:center;gap:.65rem;padding:.65rem 1rem;border:0.5px solid #e8b4bc;background:#fff9f9;cursor:pointer;text-decoration:none;color:#3d2020;transition:background .15s;border-radius:2px;}
+    .pay-btn:hover{background:#fceef0;}
+    .pay-btn-icon{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.85rem;font-weight:500;}
+    .pay-btn-icon.wise{background:#9fe3c8;color:#0a3d2e;}
+    .pay-btn-icon.paypal{background:#c8d8f5;color:#003087;}
+    .pay-btn-text{flex:1;}
+    .pay-btn-label{font-size:.82rem;font-weight:400;color:#3d2020;display:block;}
+    .pay-btn-sub{font-size:.72rem;color:#9e6b72;display:block;margin-top:.1rem;font-style:italic;}
+    .pay-btn-arrow{color:#e8b4bc;font-size:.85rem;}
+    .card-footer{padding:1rem 2.5rem 1.5rem;text-align:center;border-top:0.5px solid #f0d5d8;background:#fff0f2;}
+    .footer-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.95rem;color:#9e6b72;}
+    .floral{color:#e8b4bc;font-size:1rem;margin:0 .4rem;}
+    .no-result{text-align:center;padding:2rem;color:#9e6b72;font-style:italic;display:none;font-family:'Cormorant Garamond',serif;}
+
+    .page-footer{text-align:center;margin-top:3rem;padding-top:2rem;border-top:0.5px solid #e8b4bc;}
+    .page-footer-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.9rem;color:#b89099;}
+
+    @media(max-width:540px){
+      .page-title{font-size:2.1rem;}
+      .card-top,.card-body,.card-footer{padding-left:1.4rem;padding-right:1.4rem;}
+      .bank-val{font-size:.78rem;}
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-header">
+    <div class="page-eyebrow">Love w Lesie · September 2026</div>
+    <div class="page-title">Your Accommodation</div>
+    <div class="page-subtitle">Lusówko, Poland</div>
+    <div class="page-divider">
+      <div class="page-divider-line"></div>
+      <div class="page-divider-ornament">✦</div>
+      <div class="page-divider-line"></div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="search-area">
+      <p>Enter your name to find your accommodation assignment</p>
+      <input type="text" id="nameInput" placeholder="Search your name…" autocomplete="off" />
+      <div class="suggestions" id="suggestions"></div>
+    </div>
+
+    <div class="card" id="card">
+      <div class="lace-top">
+        <svg viewBox="0 0 520 28" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" height="28">
+          <rect width="520" height="28" fill="#fff0f2"/>
+          <path d="M0,28 Q13,8 26,28 Q39,8 52,28 Q65,8 78,28 Q91,8 104,28 Q117,8 130,28 Q143,8 156,28 Q169,8 182,28 Q195,8 208,28 Q221,8 234,28 Q247,8 260,28 Q273,8 286,28 Q299,8 312,28 Q325,8 338,28 Q351,8 364,28 Q377,8 390,28 Q403,8 416,28 Q429,8 442,28 Q455,8 468,28 Q481,8 494,28 Q507,8 520,28" fill="#fff9f9" stroke="#f0d5d8" stroke-width="0.5"/>
+          <circle cx="26" cy="28" r="2.5" fill="#f0d5d8"/><circle cx="78" cy="28" r="2.5" fill="#f0d5d8"/><circle cx="130" cy="28" r="2.5" fill="#f0d5d8"/><circle cx="182" cy="28" r="2.5" fill="#f0d5d8"/><circle cx="234" cy="28" r="2.5" fill="#f0d5d8"/><circle cx="286" cy="28" r="2.5" fill="#f0d5d8"/><circle cx="338" cy="28" r="2.5" fill="#f0d5d8"/><circle cx="390" cy="28" r="2.5" fill="#f0d5d8"/><circle cx="442" cy="28" r="2.5" fill="#f0d5d8"/><circle cx="494" cy="28" r="2.5" fill="#f0d5d8"/>
+          <circle cx="52" cy="19" r="1.8" fill="#e8b4bc" opacity="0.7"/><circle cx="104" cy="19" r="1.8" fill="#e8b4bc" opacity="0.7"/><circle cx="156" cy="19" r="1.8" fill="#e8b4bc" opacity="0.7"/><circle cx="208" cy="19" r="1.8" fill="#e8b4bc" opacity="0.7"/><circle cx="260" cy="19" r="1.8" fill="#e8b4bc" opacity="0.7"/><circle cx="312" cy="19" r="1.8" fill="#e8b4bc" opacity="0.7"/><circle cx="364" cy="19" r="1.8" fill="#e8b4bc" opacity="0.7"/><circle cx="416" cy="19" r="1.8" fill="#e8b4bc" opacity="0.7"/><circle cx="468" cy="19" r="1.8" fill="#e8b4bc" opacity="0.7"/>
+        </svg>
+      </div>
+      <div class="card-top">
+        <div class="card-eyebrow">your accommodation</div>
+        <div class="card-name" id="guestName"></div>
+        <div class="divider-floral">· · ✦ · ·</div>
+        <div class="cabin-name" id="cabinName"></div>
+        <div class="cabin-translation" id="cabinTranslation"></div>
+        <div class="cabin-type" id="cabinType"></div>
+        <div class="nights-badge" id="nightsBadge"></div>
+      </div>
+      <div class="card-body">
+        <div class="section-label">sharing with</div>
+        <ul class="roommates-list" id="roommatesList"></ul>
+        <div class="section-label" style="margin-top:1.3rem;">your cost</div>
+        <div class="price-row">
+          <span class="price-label">Per person / full stay</span>
+          <span class="price-val" id="pricePerPerson"></span>
+        </div>
+        <div class="price-row">
+          <span class="price-label">Accommodation type</span>
+          <span class="price-val" id="priceType"></span>
+        </div>
+        <p class="price-note">Prices are per person for the full stay. Final invoicing will follow closer to the event.</p>
+        <div class="section-label" style="margin-top:1.3rem;">how to pay</div>
+        <div class="bank-box">
+          <div class="bank-row">
+            <span class="bank-key">IBAN</span>
+            <span class="bank-val">DE76 1001 1001 2294 3105 40</span>
+            <button class="copy-btn" onclick="copyText(this,'DE76100110012294310540')">copy</button>
+          </div>
+          <div class="bank-row" style="border-top:0.5px solid #f0d5d8;margin-top:.3rem;padding-top:.45rem;">
+            <span class="bank-key">BIC</span>
+            <span class="bank-val">NTSBDEB1XXX</span>
+            <button class="copy-btn" onclick="copyText(this,'NTSBDEB1XXX')">copy</button>
+          </div>
+        </div>
+        <div class="pay-buttons">
+          <a class="pay-btn" href="https://wise.com/pay/me/capelleg1" target="_blank" rel="noopener">
+            <div class="pay-btn-icon wise">W</div>
+            <div class="pay-btn-text">
+              <span class="pay-btn-label">Pay via Wise</span>
+              <span class="pay-btn-sub">capellegabriel@gmail.com · send in EUR</span>
+            </div>
+            <span class="pay-btn-arrow">→</span>
+          </a>
+          <a class="pay-btn" href="https://paypal.me/capellegabriel" target="_blank" rel="noopener">
+            <div class="pay-btn-icon paypal">P</div>
+            <div class="pay-btn-text">
+              <span class="pay-btn-label">Pay via PayPal</span>
+              <span class="pay-btn-sub">USD only — please convert your EUR amount first</span>
+            </div>
+            <span class="pay-btn-arrow">→</span>
+          </a>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span class="floral">✦</span>
+        <span class="footer-text">Capelle &amp; Piotr · Summer 2026</span>
+        <span class="floral">✦</span>
+      </div>
+    </div>
+    <div class="no-result" id="noResult">No matching guest found. Try a different spelling.</div>
+
+    <div class="page-footer">
+      <div class="page-footer-text">Capelle &amp; Piotr · Love w Lesie · Lusówko, Poland · September 2026</div>
+    </div>
+  </div>
+
+<script>
+const cabins=[
+  {name:"Świerszcz",translation:"Cricket",type:"Bungalow Type 1",priceLabel:"Standard bungalow",price:"180 EUR",occupants:["Piotr Jedlinski","Capelle Jedlinska","Zuzanna Orman","Kuba Maćkowski"]},
+  {name:"Ryś",translation:"Lynx",type:"Bungalow Type 1",priceLabel:"Standard bungalow",price:"180 EUR",occupants:["Sara Grossman","Max Kersting","Julio Patino","Benjamin Lopez"]},
+  {name:"Gil",translation:"Bullfinch",type:"Bungalow Type 2",priceLabel:"Standard bungalow",price:"180 EUR",occupants:["Maki Sawada Zaharatos","Chris Zaharatos","Eugene Roussin","Molly Bradford"]},
+  {name:"Jeleń",translation:"Deer",type:"Bungalow Type 2",priceLabel:"Standard bungalow",price:"180 EUR",occupants:["Travis Hoffart","Barbara Woolsey-Hoffart","Austin Davis","Joscha Schwarzwälder"]},
+  {name:"Pszczoła",translation:"Bee",type:"Bungalow Type 2",priceLabel:"Standard bungalow",price:"180 EUR",occupants:["Jashar Seyfi","Irina","Shervin Panahi","Joseph Sofo"]},
+  {name:"Lis",translation:"Fox",type:"Bungalow Type 2",priceLabel:"Standard bungalow",price:"180 EUR",occupants:["Matt Taylor","Carina Mears Connery","Lea Fikszler","Jen Güttler"]},
+  {name:"Motyl",translation:"Butterfly",type:"Bungalow Type 2",priceLabel:"Standard bungalow",price:"180 EUR",occupants:["Conor McInerney","Paulina Berishaj","Reid Hunter","Elena Hunter"]},
+  {name:"Sowa",translation:"Owl",type:"Bungalow Type 2",priceLabel:"Standard bungalow",price:"180 EUR",occupants:["Ella Streng","Viktor Gross","Magdalena Piech","Max Riesebrodt"]},
+  {name:"Zając",translation:"Hare",type:"Bungalow Type 2",priceLabel:"Standard bungalow",price:"180 EUR",occupants:["Kiyo Dörrer","Jonas Wolframm","Noeul Kim","Daniel Josling"]},
+  {name:"Wilk",translation:"Wolf",type:"Bungalow Type 2",priceLabel:"Standard bungalow",price:"180 EUR",occupants:["Jakub Walkowiak","Magdalena Walkowiak","Evgeniya Waldner","Jemma McCreesh"]},
+  {name:"Wiewiórka",translation:"Squirrel",type:"Bungalow Type 3",priceLabel:"Standard bungalow",price:"180 EUR",occupants:["Sandra Chukwu","Krzysztof Skalowski","Bartosz Pasierbek","Filip Susmanek","Klaudia Bracisiewicz"]},
+  {name:"Ważka",translation:"Dragonfly",type:"VIP Bungalow",priceLabel:"VIP bungalow",price:"196 EUR",occupants:["John Moore","Danielle Lynagh","Anastasiia Denysenko","Paul Cinske","Heath Lock","Diana Miguel","Jacqueline Mullineaux"]},
+  {name:"Żuk",translation:"Beetle",type:"VIP Bungalow",priceLabel:"VIP bungalow",price:"196 EUR",occupants:["Brandon DuBois","Sarah DuBois","Patrick Walsh","Kara Walsh","Emily Pletcher","Nolan Kaliszewski","Megan Arenberg"]},
+  {name:"RV 1",translation:"",type:"Camper / RV",priceLabel:"RV",price:"136 EUR",occupants:["Marielle Düh","Alex Düh","Paula Bonfatti","Maxi Bonfatti"]},
+  {name:"RV 2",translation:"",type:"Camper / RV",priceLabel:"RV",price:"136 EUR",occupants:["Jacq Oeschger","Annika Horvath","Valentina Culley-Foster"]},
+  {name:"RV 3",translation:"",type:"Camper / RV",priceLabel:"RV",price:"136 EUR",occupants:["Tabea Schiele","Lukas Motsch","Bri Jecmen","Mark Hibberd"]},
+  {name:"RV 4",translation:"",type:"Camper / RV",priceLabel:"RV",price:"136 EUR",occupants:["Lidia Skokowska","Jan Skokowski","Pawel Jedlinski","Albert Gabriel"]},
+  {name:"RV 5",translation:"",type:"Camper / RV",priceLabel:"RV",price:"136 EUR",occupants:["Kaan Özkan","Nadine Bernhardt","Jerzy Grybos"]},
+  {name:"RV 6",translation:"",type:"Camper / RV",priceLabel:"RV",price:"136 EUR",occupants:["Sofia Mendez Schenone","Federico Lopez","Sara Baccolini"]},
+  {name:"RV 7",translation:"",type:"Camper / RV",priceLabel:"RV",price:"136 EUR",occupants:["Kasia Parsz","Wojtek Romanski","Seán Healy"]},
+  {name:"Tent 1",translation:"",type:"Tent Camping",priceLabel:"Tent (shared)",price:"61 EUR",occupants:["Matteo Cavana","Linnea Lieth"]},
+  {name:"Tent 2",translation:"",type:"Tent Camping",priceLabel:"Tent (solo)",price:"122 EUR",occupants:["Aleksandra Hromada"]},
+  {name:"Tent 3",translation:"",type:"Tent Camping",priceLabel:"Tent (solo)",price:"122 EUR",occupants:["Johannes Mayer"]},
+];
+
+const nights={
+  "Piotr Jedlinski":"Friday–Sunday","Capelle Jedlinska":"Friday–Sunday",
+  "Sara Grossman":"Friday–Sunday","Max Kersting":"Friday–Sunday",
+  "Julio Patino":"Friday & Saturday","Benjamin Lopez":"Friday & Saturday",
+  "Maki Sawada Zaharatos":"Friday–Sunday","Chris Zaharatos":"Friday–Sunday",
+  "Eugene Roussin":"Friday–Sunday","Molly Bradford":"Friday–Sunday",
+  "Travis Hoffart":"Friday & Saturday","Barbara Woolsey-Hoffart":"Friday & Saturday",
+  "Austin Davis":"Friday & Saturday","Joscha Schwarzwälder":"Friday & Saturday",
+  "Jashar Seyfi":"Friday–Sunday","Irina":"Friday–Sunday",
+  "Shervin Panahi":"Friday–Sunday","Joseph Sofo":"Friday–Sunday",
+  "Matt Taylor":"Friday–Sunday","Carina Mears Connery":"Friday–Sunday",
+  "Lea Fikszler":"Friday–Sunday","Jen Güttler":"Friday–Sunday",
+  "Conor McInerney":"Friday–Sunday","Paulina Berishaj":"Friday–Sunday",
+  "Reid Hunter":"Friday & Saturday","Elena Hunter":"Friday & Saturday",
+  "Ella Streng":"Friday–Sunday","Viktor Gross":"Friday–Sunday",
+  "Magdalena Piech":"Friday–Sunday","Max Riesebrodt":"Friday–Sunday",
+  "Kiyo Dörrer":"Friday–Sunday","Jonas Wolframm":"Friday–Sunday",
+  "Noeul Kim":"Friday–Sunday","Daniel Josling":"Friday–Sunday",
+  "Jakub Walkowiak":"Friday–Sunday","Magdalena Walkowiak":"Friday–Sunday",
+  "Evgeniya Waldner":"Friday–Sunday","Jemma McCreesh":"Friday & Saturday",
+  "Sandra Chukwu":"Friday–Sunday","Krzysztof Skalowski":"Friday–Sunday",
+  "Bartosz Pasierbek":"Friday–Sunday","Filip Susmanek":"Friday–Sunday","Klaudia Bracisiewicz":"Friday–Sunday",
+  "John Moore":"Friday–Sunday","Danielle Lynagh":"Friday–Sunday",
+  "Anastasiia Denysenko":"Friday–Sunday","Paul Cinske":"Friday–Sunday",
+  "Heath Lock":"Friday–Sunday","Diana Miguel":"Friday–Sunday","Jacqueline Mullineaux":"Friday–Sunday",
+  "Brandon DuBois":"Friday–Sunday","Sarah DuBois":"Friday–Sunday",
+  "Patrick Walsh":"Friday–Sunday","Kara Walsh":"Friday–Sunday",
+  "Emily Pletcher":"Friday–Sunday","Nolan Kaliszewski":"Friday–Sunday","Megan Arenberg":"Friday–Sunday",
+  "Marielle Düh":"Friday–Sunday","Alex Düh":"Friday–Sunday","Paula Bonfatti":"Friday–Sunday","Maxi Bonfatti":"Friday–Sunday",
+  "Jacq Oeschger":"Friday–Sunday","Annika Horvath":"Friday–Sunday","Valentina Culley-Foster":"Friday–Sunday",
+  "Tabea Schiele":"Friday–Sunday","Lukas Motsch":"Friday–Sunday",
+  "Bri Jecmen":"Friday–Sunday","Mark Hibberd":"Friday–Sunday",
+  "Lidia Skokowska":"Friday–Sunday","Jan Skokowski":"Friday–Sunday",
+  "Pawel Jedlinski":"Friday–Sunday","Albert Gabriel":"Friday–Sunday",
+  "Kaan Özkan":"Friday–Sunday","Nadine Bernhardt":"Friday–Sunday","Jerzy Grybos":"Saturday & Sunday",
+  "Sofia Mendez Schenone":"Friday & Saturday","Federico Lopez":"Saturday & Sunday","Sara Baccolini":"Friday–Sunday",
+  "Kasia Parsz":"Friday–Sunday","Wojtek Romanski":"Friday–Sunday","Seán Healy":"Friday–Sunday",
+  "Matteo Cavana":"Friday–Sunday","Linnea Lieth":"Friday–Sunday",
+  "Aleksandra Hromada":"Friday–Sunday","Johannes Mayer":"Friday–Sunday",
+};
+
+function normalize(s){return s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim();}
+const allGuests=[];
+cabins.forEach(c=>c.occupants.forEach(o=>{if(o)allGuests.push({full:o,cabin:c});}));
+
+const input=document.getElementById('nameInput');
+const sugg=document.getElementById('suggestions');
+const card=document.getElementById('card');
+const noRes=document.getElementById('noResult');
+
+input.addEventListener('input',function(){
+  const v=this.value.trim();
+  if(v.length<2){sugg.style.display='none';return;}
+  const nv=normalize(v);
+  const matches=allGuests.filter(g=>normalize(g.full).includes(nv)).slice(0,6);
+  if(!matches.length){sugg.style.display='none';return;}
+  sugg.innerHTML='';
+  matches.forEach(m=>{
+    const d=document.createElement('div');
+    d.className='sug-item';
+    d.textContent=m.full;
+    d.addEventListener('mousedown',()=>{
+      input.value=m.full;
+      sugg.style.display='none';
+      showCard(m);
+    });
+    sugg.appendChild(d);
+  });
+  sugg.style.display='block';
+});
+
+document.addEventListener('click',e=>{if(!sugg.contains(e.target)&&e.target!==input)sugg.style.display='none';});
+
+input.addEventListener('keydown',e=>{
+  if(e.key==='Enter'){
+    const v=input.value.trim();
+    const nv=normalize(v);
+    const match=allGuests.find(g=>normalize(g.full)===nv||normalize(g.full).includes(nv));
+    sugg.style.display='none';
+    if(match){showCard(match);}else{card.style.display='none';noRes.style.display='block';}
+  }
+});
+
+function copyText(btn,text){
+  navigator.clipboard.writeText(text).then(()=>{
+    btn.textContent='✓ copied';
+    btn.classList.add('copied');
+    setTimeout(()=>{btn.textContent='copy';btn.classList.remove('copied');},2000);
+  });
+}
+
+function showCard(m){
+  noRes.style.display='none';
+  document.getElementById('guestName').textContent=m.full;
+  document.getElementById('cabinName').textContent=m.cabin.name;
+  const tEl=document.getElementById('cabinTranslation');
+  if(m.cabin.translation){tEl.textContent='('+m.cabin.translation+')';tEl.style.display='block';}
+  else{tEl.style.display='none';}
+  document.getElementById('cabinType').textContent=m.cabin.type;
+  document.getElementById('nightsBadge').textContent=nights[m.full]||'See your invitation';
+  const others=m.cabin.occupants.filter(o=>o&&o!==m.full);
+  const ul=document.getElementById('roommatesList');
+  ul.innerHTML='';
+  if(!others.length){
+    const li=document.createElement('li');li.textContent='Solo accommodation';ul.appendChild(li);
+  } else {
+    others.forEach(o=>{const li=document.createElement('li');li.textContent=o;ul.appendChild(li);});
+  }
+  document.getElementById('pricePerPerson').textContent=m.cabin.price;
+  document.getElementById('priceType').textContent=m.cabin.priceLabel;
+  card.style.display='block';
+  card.scrollIntoView({behavior:'smooth',block:'start'});
+}
+</script>
+</body>
+</html>
